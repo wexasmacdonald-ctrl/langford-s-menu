@@ -1,0 +1,81 @@
+{
+  "pizzas": [
+    {
+      "nameEn": "Cheese",
+      "nameFr": "Fromage",
+      "image": "/images/pizzas/cheese.png",
+      "prices": ["8.99", "17.40", "21.74", "23.74", "25.22"]
+    },
+    {
+      "nameEn": "Pepperoni",
+      "nameFr": "Pepperoni",
+      "image": "/images/pizzas/pepperoni.png",
+      "prices": ["9.99", "18.26", "22.61", "24.35", "26.09"]
+    },
+    {
+      "nameEn": "Pepperoni & Bacon",
+      "nameFr": "Pepperoni et bacon",
+      "image": "/images/pizzas/pepperoni-bacon.png",
+      "prices": ["10.99", "19.13", "23.48", "25.22", "26.96"]
+    },
+    {
+      "nameEn": "Combination",
+      "nameFr": "Combinaison",
+      "image": "/images/pizzas/combination.png",
+      "prices": ["10.99", "19.13", "23.48", "25.22", "26.96"]
+    },
+    {
+      "nameEn": "Vegetarian",
+      "nameFr": "Végétarienne",
+      "image": "/images/pizzas/vegetarian.png",
+      "prices": ["10.99", "19.13", "23.48", "25.22", "26.96"]
+    },
+    {
+      "nameEn": "Hawaiian",
+      "nameFr": "Hawaïenne",
+      "image": "/images/pizzas/hawaiian.png",
+      "prices": ["10.99", "19.13", "23.48", "25.22", "26.96"]
+    }
+  ],
+  "premiumPizzas": [
+    {
+      "nameEn": "Meats",
+      "nameFr": "Viande",
+      "image": "/images/pizzas/meat.png",
+      "featured": true,
+      "price": "13.99",
+      "prices": ["13.99", "21.47", "26.09", "27.83", "29.57"]
+    },
+    {
+      "nameEn": "Canadian",
+      "nameFr": "Canadienne",
+      "image": "/images/pizzas/canadian-classic.png",
+      "featured": true,
+      "price": "11.99",
+      "prices": ["11.99", "20.00", "24.35", "26.09", "27.83"]
+    },
+    {
+      "nameEn": "Classic",
+      "nameFr": "Classique",
+      "image": "/images/pizzas/classic.png",
+      "featured": false,
+      "price": "12.99",
+      "prices": ["12.99", "20.87", "25.22", "26.96", "28.70"]
+    },
+    {
+      "nameEn": "Greek",
+      "nameFr": "Grecque",
+      "image": "/images/pizzas/greek.png",
+      "featured": true,
+      "price": "12.99",
+      "prices": ["12.99", "20.87", "25.22", "26.96", "28.70"]
+    }
+  ],
+  "addons": [
+    { "nameEn": "Meat", "nameFr": "Viande", "prices": ["1.75", "2.25", "2.75", "3.50", "4.25"] },
+    { "nameEn": "Smoked Meat", "nameFr": "Viande fumée", "prices": ["6.49", "6.49", "10.99", "10.99", "14.99"] },
+    { "nameEn": "Cheese", "nameFr": "Fromage", "prices": ["1.75", "2.25", "2.75", "3.50", "4.25"] },
+    { "nameEn": "Vegetable", "nameFr": "Légume", "prices": ["1.00", "1.50", "2.00", "2.75", "3.50"] }
+  ]
+}
+

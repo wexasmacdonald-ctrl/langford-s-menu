@@ -1,0 +1,69 @@
+{
+  "slideA": {
+    "fingerFoods": [
+      { "name": "Mozza Sticks (1)", "price": "1.52" },
+      { "name": "Onion Rings (1)", "price": "5.22" },
+      { "name": "Zucchini Sticks (1)", "price": "1.52" },
+      { "name": "Pizza Finger (1)", "price": "2.39" },
+      { "name": "Deep Fried Pickle (1)", "price": "1.52" },
+      { "name": "Popcorn Chicken (1)", "price": "6.96" },
+      { "name": "Chicken Finger (1)", "price": "2.75" }
+    ],
+    "poutine": [
+      { "name": "Small / Petit", "price": "6.09" },
+      { "name": "Medium / Moyen", "price": "7.83" },
+      { "name": "Large / Grande", "price": "9.57" },
+      { "name": "Family / Famille", "price": "13.05", "featured": true }
+    ],
+    "poutineAddons": [
+      { "name": "+ Smoked Meat", "price": "6.49" },
+      { "name": "+ Ground Beef", "price": "3.99" }
+    ],
+    "friedChicken": [
+      { "name": "3 Pieces / morceaux", "price": "7.83" },
+      { "name": "3 Pieces + Fries", "price": "11.30" },
+      { "name": "6 Pieces / morceaux", "price": "13.92" },
+      { "name": "6 Pc + Fries", "price": "17.40", "featured": true }
+    ],
+    "hotDogs": [
+      { "name": "Pogo", "price": "3.48" },
+      { "name": "Hot Dog", "price": "3.48" },
+      { "name": "Whistle Dog", "price": "4.35" }
+    ]
+  },
+  "slideB": {
+    "fries": [
+      { "name": "Small / Petit", "price": "3.91" },
+      { "name": "Medium / Moyen", "price": "5.22" },
+      { "name": "Large / Grande", "price": "6.52" },
+      { "name": "Family / Famille", "price": "8.69", "featured": true },
+      { "name": "Spicy Fries (M)", "price": "6.22" },
+      { "name": "Potato Wedges (M)", "price": "6.22" }
+    ],
+    "partyPack": {
+      "title": "Party Pack / Plateau",
+      "description": "6 Mozza, 6 Zucchini, 3 Pizza Fingers, 6 Pickles",
+      "price": "29.99"
+    },
+    "burgers": [
+      { "name": "Plain", "base": "5.22", "withFries": "8.69" },
+      { "name": "Cheese", "base": "6.62", "withFries": "10.00" },
+      { "name": "Bacon & Cheese", "base": "6.96", "withFries": "10.44" },
+      { "name": "Chicken", "base": "6.96", "withFries": "10.44" }
+    ],
+    "chickenWings": {
+      "flavors": [
+        "Mild / Doux",
+        "Medium / Moyen",
+        "Hot / Épicé",
+        "Honey Garlic / Miel-Ail",
+        "Sweet Chili / Piment Sucré"
+      ],
+      "sizes": [
+        { "name": "8 Wings", "price": "8.69" },
+        { "name": "12 Wings", "price": "12.18", "featured": true },
+        { "name": "20 Wings", "price": "19.57" }
+      ]
+    }
+  }
+}
