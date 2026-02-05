@@ -90,6 +90,10 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-image: url("/pizzas/marble.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
   }
 }
 
@@ -104,5 +108,9 @@
   }
   .s4-font-grow * {
     font-size: calc(1em * 1.01) !important;
+  }
+  .overflow-flag {
+    outline: 2px solid rgba(255, 0, 0, 0.8);
+    outline-offset: 2px;
   }
 }
