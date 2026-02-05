@@ -65,7 +65,7 @@ function CardHeader({ children, className }: { children: React.ReactNode; classN
   return (
     <div
       className={cn(
-        "font-[family-name:var(--font-heading)] text-[2.1vh] font-bold uppercase text-primary border-b border-border/60 px-[1vh] py-[0.6vh]",
+        "font-[family-name:var(--font-heading)] text-[2.1vh] font-bold uppercase bg-primary text-primary-foreground border-b border-border/60 px-[1vh] py-[0.6vh]",
         className
       )}
     >
@@ -177,7 +177,7 @@ export default function Screen4() {
     "text-[1.3vh] uppercase tracking-wide text-muted-foreground font-bold";
 
   return (
-    <main className="w-screen h-screen bg-background text-foreground flex flex-col overflow-hidden p-[1.5vh] relative s4-font-shrink">
+    <main className="w-screen h-screen bg-background text-foreground flex flex-col overflow-hidden p-[1.5vh] relative s4-font-grow">
       <div className="absolute top-[1vh] right-[1.5vh] z-20 flex items-center gap-[0.6vh]">
         <button
           type="button"
@@ -1184,22 +1184,6 @@ export default function Screen4() {
             </SectionCard>
             <SectionCard>
               <CardImage src="/images/s4/shawarma.png" alt="Shawarma" />
-              <CardHeader>
-                {editMode ? (
-                  <input
-                    value={data.slideB.shawarmaTitle}
-                    onChange={(event) =>
-                      updateData((prev) => ({
-                        ...prev,
-                        slideB: { ...prev.slideB, shawarmaTitle: event.target.value },
-                      }))
-                    }
-                    className={cn(inputBaseClass, "w-full text-primary border-primary/40")}
-                  />
-                ) : (
-                  data.slideB.shawarmaTitle
-                )}
-              </CardHeader>
               <div className="flex-1 min-h-0 overflow-y-auto px-[1vh] py-[0.8vh] space-y-[0.6vh]">
                 <div>
                   <MicroHeader>

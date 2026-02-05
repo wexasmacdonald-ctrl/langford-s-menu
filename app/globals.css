@@ -102,4 +102,7 @@
     grid-template-columns: max-content max-content max-content;
     justify-content: start;
   }
+  .s4-font-grow * {
+    font-size: calc(1em * 1.01) !important;
+  }
 }
