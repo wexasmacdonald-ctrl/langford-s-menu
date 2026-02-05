@@ -76,8 +76,8 @@ function CardHeader({ children, className }: { children: React.ReactNode; classN
 
 function MicroHeader({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-primary text-primary-foreground text-[2vh] font-bold uppercase px-[0.8vh] py-[0.4vh]">
-      {children}
+    <div className="bg-primary text-primary-foreground text-[2vh] font-bold uppercase font-[family-name:var(--font-heading)] px-[0.8vh] py-[0.4vh] -mx-[1vh]">
+      <div className="px-[1vh]">{children}</div>
     </div>
   );
 }
@@ -1184,29 +1184,29 @@ export default function Screen4() {
             </SectionCard>
             <SectionCard>
               <CardImage src="/images/s4/shawarma.png" alt="Shawarma" />
+              <CardHeader>
+                {editMode ? (
+                  <input
+                    value={data.slideB.shawarmaSectionTitle}
+                    onChange={(event) =>
+                      updateData((prev) => ({
+                        ...prev,
+                        slideB: { ...prev.slideB, shawarmaSectionTitle: event.target.value },
+                      }))
+                    }
+                    className={cn(inputBaseClass, "w-full text-primary border-primary/40")}
+                  />
+                ) : (
+                  data.slideB.shawarmaSectionTitle
+                )}
+              </CardHeader>
               <div className="flex-1 min-h-0 overflow-y-auto px-[1vh] py-[0.8vh] space-y-[0.6vh]">
                 <div>
-                  <MicroHeader>
-                    {editMode ? (
-                      <input
-                        value={data.slideB.shawarmaSectionTitle}
-                        onChange={(event) =>
-                          updateData((prev) => ({
-                            ...prev,
-                            slideB: { ...prev.slideB, shawarmaSectionTitle: event.target.value },
-                          }))
-                        }
-                        className={cn(inputBaseClass, "w-full text-primary-foreground border-white/30")}
-                      />
-                    ) : (
-                      data.slideB.shawarmaSectionTitle
-                    )}
-                  </MicroHeader>
                   <div className="mt-[0.6vh] space-y-[0.6vh]">
                     {data.items.shawarmaItems.map((item, index) => (
                       <div
                         key={index}
-                        className="grid grid-cols-[1fr_auto_auto] gap-x-[1vh] items-center text-[1.5vh]"
+                        className="grid grid-cols-[minmax(0,1fr)_6.5vh_6.5vh] gap-x-[0.6vh] items-center text-[1.5vh]"
                       >
                         {editMode ? (
                           <input
@@ -1222,29 +1222,10 @@ export default function Screen4() {
                                 },
                               }))
                             }
-                            className={cn(inputBaseClass, "w-full")}
+                            className={cn(inputBaseClass, "w-full whitespace-nowrap")}
                           />
                         ) : (
-                          <span>{item.name}</span>
-                        )}
-                        {editMode ? (
-                          <input
-                            value={item.price}
-                            onChange={(event) =>
-                              updateData((prev) => ({
-                                ...prev,
-                                items: {
-                                  ...prev.items,
-                                  shawarmaItems: updateItem(prev.items.shawarmaItems, index, {
-                                    price: event.target.value,
-                                  }),
-                                },
-                              }))
-                            }
-                            className={cn(inputBaseClass, "w-[6vh] text-right text-primary font-bold")}
-                          />
-                        ) : (
-                          <span className="text-primary font-bold">${item.price}</span>
+                          <span className="whitespace-nowrap">{item.name}</span>
                         )}
                         {editMode ? (
                           <input
@@ -1260,12 +1241,51 @@ export default function Screen4() {
                                 },
                               }))
                             }
-                            placeholder=""
-                            className={cn(inputBaseClass, "w-[6vh] text-right text-primary font-bold")}
+                            className={cn(
+                              inputBaseClass,
+                              "w-[7vh] text-right text-primary font-bold whitespace-nowrap transform -translate-x-[70px]",
+                              item.withGarlic ? "" : "invisible"
+                            )}
                           />
                         ) : (
-                          <span className="text-primary font-bold">
+                          <span
+                            className={cn(
+                              "text-primary font-bold transform -translate-x-[70px] inline-block",
+                              item.withGarlic ? "" : "invisible"
+                            )}
+                          >
                             {item.withGarlic ? `$${item.withGarlic}` : ""}
+                          </span>
+                        )}
+                        {editMode ? (
+                          <input
+                            value={item.price}
+                            onChange={(event) =>
+                              updateData((prev) => ({
+                                ...prev,
+                                items: {
+                                  ...prev.items,
+                                  shawarmaItems: updateItem(prev.items.shawarmaItems, index, {
+                                    price: event.target.value,
+                                  }),
+                                },
+                              }))
+                            }
+                            placeholder=""
+                            className={cn(
+                              inputBaseClass,
+                              "w-[7vh] text-right text-primary font-bold whitespace-nowrap",
+                              !item.withGarlic ? "transform -translate-x-[120px]" : ""
+                            )}
+                          />
+                        ) : (
+                          <span
+                            className={cn(
+                              "text-primary font-bold whitespace-nowrap",
+                              !item.withGarlic ? "transform -translate-x-[120px] inline-block" : ""
+                            )}
+                          >
+                            ${item.price}
                           </span>
                         )}
                       </div>
