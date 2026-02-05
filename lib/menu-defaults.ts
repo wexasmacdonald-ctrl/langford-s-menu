@@ -266,7 +266,8 @@ export const defaultS4Data: S4Data = {
     ],
     breakfastExtras: [
       { name: "Western", price: "3.99" },
-      { name: "Breakfast Burger", price: "3.99" },
+      { name: "Breakfast Burger", price: "2 for 8" },
+      { name: "BLT", price: "2 for 8" },
       { name: "Breakfast Burrito", price: "5.99" },
       { name: "Plain Bagel w/ Cream Cheese", price: "2.99" },
       { name: "Add Home Fries", price: "2.49" },

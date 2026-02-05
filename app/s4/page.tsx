@@ -29,6 +29,15 @@ function updateItem<T extends object>(items: T[], index: number, patch: Partial<
   return items.map((item, idx) => (idx === index ? { ...item, ...patch } : item));
 }
 
+function formatPrice(value: string) {
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+  if (/^[0-9]+(\.[0-9]{1,2})?$/.test(trimmed)) {
+    return `$${trimmed}`;
+  }
+  return trimmed;
+}
+
 function normalizeS4Data(payload: S4Data): S4Data {
   const raw = JSON.stringify(payload);
   const cleaned = raw.replace(/DÃ©jeuner|D�jeuner|Djeuner/g, "Déjeuner");
@@ -94,9 +103,11 @@ export default function Screen4() {
     canRedo,
   } = useUndoRedo<S4Data>(defaultS4Data);
   const [editMode, setEditMode] = useState(false);
+  const [showOverflow, setShowOverflow] = useState(false);
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [dirty, setDirty] = useState(false);
   const lastSavedRef = useRef<S4Data>(defaultS4Data);
+  const mainRef = useRef<HTMLElement | null>(null);
 
   const updateData = useCallback(
     (updater: (prev: S4Data) => S4Data) => {
@@ -153,6 +164,21 @@ export default function Screen4() {
     return () => window.removeEventListener("keydown", handleKeydown);
   }, [editMode, undo, redo, canUndo, canRedo]);
 
+  useEffect(() => {
+    const root = mainRef.current;
+    if (!root) return;
+    const candidates = root.querySelectorAll<HTMLElement>("*");
+    candidates.forEach((el) => {
+      el.classList.remove("overflow-flag");
+    });
+    if (!showOverflow) return;
+    candidates.forEach((el) => {
+      if (el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight) {
+        el.classList.add("overflow-flag");
+      }
+    });
+  }, [showOverflow, data, currentSlide]);
+
   const saveChanges = async () => {
     setSaveState("saving");
     try {
@@ -177,7 +203,10 @@ export default function Screen4() {
     "text-[1.3vh] uppercase tracking-wide text-muted-foreground font-bold";
 
   return (
-    <main className="w-screen h-screen bg-background text-foreground flex flex-col overflow-hidden p-[1.5vh] relative s4-font-grow">
+    <main
+      ref={mainRef}
+      className="w-screen h-screen bg-background text-foreground flex flex-col overflow-hidden p-[1.5vh] relative s4-font-grow"
+    >
       <div className="absolute top-[1vh] right-[1.5vh] z-20 flex items-center gap-[0.6vh]">
         <button
           type="button"
@@ -185,6 +214,13 @@ export default function Screen4() {
           className="text-[1.6vh] uppercase font-bold border border-border rounded px-[1vh] py-[0.4vh]"
         >
           {editMode ? "Done" : "Edit"}
+        </button>
+        <button
+          type="button"
+          onClick={() => setShowOverflow((prev) => !prev)}
+          className="text-[1.6vh] uppercase font-bold border border-border rounded px-[1vh] py-[0.4vh]"
+        >
+          {showOverflow ? "Overflow On" : "Overflow Off"}
         </button>
         <button
           type="button"
@@ -341,7 +377,7 @@ export default function Screen4() {
                       {data.slideA.partyPackDescription}
                     </p>
                   )}
-                  <div className="text-primary font-bold text-[1.8vh]">
+                  <div className="text-primary font-bold text-[1.8vh] text-right">
                     {editMode ? (
                       <input
                         value={data.slideA.partyPackPrice}
@@ -545,7 +581,11 @@ export default function Screen4() {
                           className={cn(inputBaseClass, "w-[6vh] text-right text-primary font-bold")}
                         />
                       ) : (
-                        <span className="text-primary font-bold">${item.price}</span>
+                        item.price && item.price !== "0000" ? (
+                          <span className="text-primary font-bold">${item.price}</span>
+                        ) : (
+                          <span />
+                        )
                       )}
                     </div>
                   ))}
@@ -553,21 +593,21 @@ export default function Screen4() {
                 <MicroHeader>
                   {editMode ? (
                     <input
-                      value={data.slideA.hotDogsTitle}
+                      value={data.slideB.chickenWingsTitle}
                       onChange={(event) =>
                         updateData((prev) => ({
                           ...prev,
-                          slideA: { ...prev.slideA, hotDogsTitle: event.target.value },
+                          slideB: { ...prev.slideB, chickenWingsTitle: event.target.value },
                         }))
                       }
                       className={cn(inputBaseClass, "w-full text-primary-foreground border-white/30")}
                     />
                   ) : (
-                    data.slideA.hotDogsTitle
+                    data.slideB.chickenWingsTitle
                   )}
                 </MicroHeader>
                 <div className="px-[1vh] py-[0.8vh] space-y-[0.6vh]">
-                  {data.items.hotDogs.map((item, index) => (
+                  {data.items.wingsSizes.map((item, index) => (
                     <div key={index} className={listRowClass}>
                       {editMode ? (
                         <input
@@ -577,7 +617,7 @@ export default function Screen4() {
                               ...prev,
                               items: {
                                 ...prev.items,
-                                hotDogs: updateItem(prev.items.hotDogs, index, {
+                                wingsSizes: updateItem(prev.items.wingsSizes, index, {
                                   name: event.target.value,
                                 }),
                               },
@@ -596,16 +636,16 @@ export default function Screen4() {
                               ...prev,
                               items: {
                                 ...prev.items,
-                                hotDogs: updateItem(prev.items.hotDogs, index, {
+                                wingsSizes: updateItem(prev.items.wingsSizes, index, {
                                   price: event.target.value,
                                 }),
                               },
                             }))
                           }
-                          className={cn(inputBaseClass, "w-[6vh] text-right text-primary font-bold")}
+                        className={cn(inputBaseClass, "w-[8vh] text-right text-primary font-bold")}
                         />
                       ) : (
-                        <span className="text-primary font-bold">${item.price}</span>
+                        <span className="text-primary font-bold">{item.price}</span>
                       )}
                     </div>
                   ))}
@@ -736,8 +776,10 @@ export default function Screen4() {
                           }
                           className={cn(inputBaseClass, "w-[6vh] text-right text-primary font-bold")}
                         />
-                      ) : (
+                      ) : item.price && item.price !== "0000" ? (
                         <span className="text-primary font-bold">${item.price}</span>
+                      ) : (
+                        <span />
                       )}
                       {editMode ? (
                         <input
@@ -761,6 +803,51 @@ export default function Screen4() {
                     </div>
                   ))}
                 </div>
+                <MicroHeader>{data.slideA.hotDogsTitle}</MicroHeader>
+                <div className="mt-[0.6vh] space-y-[0.6vh]">
+                  {data.items.hotDogs.map((item, index) => (
+                    <div key={index} className={listRowClass}>
+                      {editMode ? (
+                        <input
+                          value={item.name}
+                          onChange={(event) =>
+                            updateData((prev) => ({
+                              ...prev,
+                              items: {
+                                ...prev.items,
+                                hotDogs: updateItem(prev.items.hotDogs, index, {
+                                  name: event.target.value,
+                                }),
+                              },
+                            }))
+                          }
+                          className={cn(inputBaseClass, "w-full")}
+                        />
+                      ) : (
+                        <span>{item.name}</span>
+                      )}
+                      {editMode ? (
+                        <input
+                          value={item.price}
+                          onChange={(event) =>
+                            updateData((prev) => ({
+                              ...prev,
+                              items: {
+                                ...prev.items,
+                                hotDogs: updateItem(prev.items.hotDogs, index, {
+                                  price: event.target.value,
+                                }),
+                              },
+                            }))
+                          }
+                          className={cn(inputBaseClass, "w-[6vh] text-right text-primary font-bold")}
+                        />
+                      ) : (
+                        <span className="text-primary font-bold">${item.price}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             </SectionCard>
           </div>
@@ -773,7 +860,7 @@ export default function Screen4() {
               : "opacity-0 translate-x-full pointer-events-none"
           )}
         >
-          <div className="h-full grid grid-cols-[1fr_1fr_1.15fr_1.15fr] gap-[1.2vh]">
+          <div className="h-full grid grid-cols-[1fr_1.15fr_1.15fr] gap-[1.2vh]">
             <SectionCard>
               <CardImage
                 src="/images/s4/burger.png"
@@ -926,112 +1013,6 @@ export default function Screen4() {
                 ))}
               </div>
             </SectionCard>
-            <SectionCard>
-              <CardImage src="/images/s4/chicken-wings.png" alt="Chicken wings" />
-              <CardHeader>
-                {editMode ? (
-                  <input
-                    value={data.slideB.chickenWingsTitle}
-                    onChange={(event) =>
-                      updateData((prev) => ({
-                        ...prev,
-                        slideB: { ...prev.slideB, chickenWingsTitle: event.target.value },
-                      }))
-                    }
-                    className={cn(inputBaseClass, "w-full text-primary border-primary/40")}
-                  />
-                ) : (
-                  data.slideB.chickenWingsTitle
-                )}
-              </CardHeader>
-              <div className="px-[1vh] py-[0.8vh]">
-                <div className="text-[1.3vh] uppercase text-muted-foreground font-bold mb-[0.5vh]">
-                  {editMode ? (
-                    <input
-                      value={data.slideB.wingsFlavorsTitle}
-                      onChange={(event) =>
-                        updateData((prev) => ({
-                          ...prev,
-                          slideB: { ...prev.slideB, wingsFlavorsTitle: event.target.value },
-                        }))
-                      }
-                      className={cn(inputBaseClass, "w-full text-muted-foreground")}
-                    />
-                  ) : (
-                    data.slideB.wingsFlavorsTitle
-                  )}
-                </div>
-                <div className="grid grid-cols-2 gap-[0.4vh] text-[1.4vh]">
-                  {data.items.wingsFlavors.map((flavor, index) => (
-                    <div key={index}>
-                      {editMode ? (
-                        <input
-                          value={flavor}
-                          onChange={(event) =>
-                            updateData((prev) => ({
-                              ...prev,
-                              items: {
-                                ...prev.items,
-                                wingsFlavors: prev.items.wingsFlavors.map((item, idx) =>
-                                  idx === index ? event.target.value : item
-                                ),
-                              },
-                            }))
-                          }
-                          className={cn(inputBaseClass, "w-full")}
-                        />
-                      ) : (
-                        <span>{flavor}</span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-[0.8vh] space-y-[0.6vh]">
-                  {data.items.wingsSizes.map((item, index) => (
-                    <div key={index} className={listRowClass}>
-                      {editMode ? (
-                        <input
-                          value={item.name}
-                          onChange={(event) =>
-                            updateData((prev) => ({
-                              ...prev,
-                              items: {
-                                ...prev.items,
-                                wingsSizes: updateItem(prev.items.wingsSizes, index, {
-                                  name: event.target.value,
-                                }),
-                              },
-                            }))
-                          }
-                          className={cn(inputBaseClass, "w-full")}
-                        />
-                      ) : (
-                        <span>{item.name}</span>
-                      )}
-                      {editMode ? (
-                        <input
-                          value={item.price}
-                          onChange={(event) =>
-                            updateData((prev) => ({
-                              ...prev,
-                              items: {
-                                ...prev.items,
-                                wingsSizes: updateItem(prev.items.wingsSizes, index, {
-                                  price: event.target.value,
-                                }),
-                              },
-                            }))
-                          }
-                          className={cn(inputBaseClass, "w-[6vh] text-right text-primary font-bold")}
-                        />
-                      ) : (
-                        <span className="text-primary font-bold">${item.price}</span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </SectionCard>
 
             <SectionCard>
               <CardImage src="/images/s4/breakfast.png" alt="Breakfast" />
@@ -1088,10 +1069,10 @@ export default function Screen4() {
                               },
                             }))
                           }
-                          className={cn(inputBaseClass, "w-[6vh] text-right text-primary font-bold")}
+                          className={cn(inputBaseClass, "w-[10vh] text-right text-primary font-bold")}
                         />
                       ) : (
-                        <span className="text-primary font-bold">${item.price}</span>
+                        <span className="text-primary font-bold">{item.price}</span>
                       )}
                     </div>
                     <div className="text-[1.2vh] text-muted-foreground">
@@ -1157,25 +1138,25 @@ export default function Screen4() {
                         ) : (
                           <span>{item.name}</span>
                         )}
-                        {editMode ? (
-                          <input
-                            value={item.price}
-                            onChange={(event) =>
-                              updateData((prev) => ({
-                                ...prev,
-                                items: {
-                                  ...prev.items,
-                                  breakfastExtras: updateItem(prev.items.breakfastExtras, index, {
-                                    price: event.target.value,
-                                  }),
-                                },
-                              }))
-                            }
-                            className={cn(inputBaseClass, "w-[6vh] text-right text-primary font-bold")}
-                          />
-                        ) : (
-                          <span className="text-primary font-bold">${item.price}</span>
-                        )}
+                      {editMode ? (
+                        <input
+                          value={item.price}
+                          onChange={(event) =>
+                            updateData((prev) => ({
+                              ...prev,
+                              items: {
+                                ...prev.items,
+                                breakfastExtras: updateItem(prev.items.breakfastExtras, index, {
+                                  price: event.target.value,
+                                }),
+                              },
+                            }))
+                          }
+                          className={cn(inputBaseClass, "w-[10vh] text-right text-primary font-bold")}
+                        />
+                      ) : (
+                        <span className="text-primary font-bold">{item.price}</span>
+                      )}
                       </div>
                     ))}
                   </div>
@@ -1202,7 +1183,19 @@ export default function Screen4() {
               </CardHeader>
               <div className="flex-1 min-h-0 overflow-y-auto px-[1vh] py-[0.8vh] space-y-[0.6vh]">
                 <div>
-                  <div className="mt-[0.6vh] space-y-[0.6vh]">
+                  <div className="mt-[0.6vh] grid grid-cols-[minmax(0,1fr)_6.5vh_6.5vh] gap-x-[0.6vh]">
+                    <span className={tableHeaderClass}>Shawarma</span>
+                    <span
+                      className={cn(
+                        tableHeaderClass,
+                        "text-right whitespace-nowrap transform -translate-x-[50px] inline-block"
+                      )}
+                    >
+                      Price + Garlic<br />potatoes
+                    </span>
+                    <span />
+                  </div>
+                  <div className="mt-[0.4vh] space-y-[0.6vh]">
                     {data.items.shawarmaItems.map((item, index) => (
                       <div
                         key={index}
@@ -1243,14 +1236,14 @@ export default function Screen4() {
                             }
                             className={cn(
                               inputBaseClass,
-                              "w-[7vh] text-right text-primary font-bold whitespace-nowrap transform -translate-x-[70px]",
+                              "w-[7vh] text-right text-primary font-bold whitespace-nowrap transform -translate-x-[50px]",
                               item.withGarlic ? "" : "invisible"
                             )}
                           />
                         ) : (
                           <span
                             className={cn(
-                              "text-primary font-bold transform -translate-x-[70px] inline-block",
+                              "text-primary font-bold transform -translate-x-[50px] inline-block",
                               item.withGarlic ? "" : "invisible"
                             )}
                           >
@@ -1275,14 +1268,14 @@ export default function Screen4() {
                             className={cn(
                               inputBaseClass,
                               "w-[7vh] text-right text-primary font-bold whitespace-nowrap",
-                              !item.withGarlic ? "transform -translate-x-[120px]" : ""
+                              !item.withGarlic ? "transform -translate-x-[110px]" : ""
                             )}
                           />
                         ) : (
                           <span
                             className={cn(
                               "text-primary font-bold whitespace-nowrap",
-                              !item.withGarlic ? "transform -translate-x-[120px] inline-block" : ""
+                              !item.withGarlic ? "transform -translate-x-[110px] inline-block" : ""
                             )}
                           >
                             ${item.price}

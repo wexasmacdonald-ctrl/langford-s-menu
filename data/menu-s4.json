@@ -211,25 +211,11 @@
         "withFries": "12.18"
       }
     ],
-    "wingsFlavors": [
-      "Mild / Doux",
-      "Medium / Moyen",
-      "Hot / pic",
-      "Honey Garlic / Miel-Ail",
-      "Sweet Chili / Piment Sucr"
-    ],
+    "wingsFlavors": [],
     "wingsSizes": [
-      {
-        "name": "8 Wings",
-        "price": "8.69"
-      },
       {
         "name": "12 Wings",
         "price": "12.18"
-      },
-      {
-        "name": "20 Wings",
-        "price": "19.57"
       }
     ],
     "breakfastItems": [
@@ -256,7 +242,11 @@
       },
       {
         "name": "Breakfast Burger",
-        "price": "3.99"
+        "price": "2 for 8"
+      },
+      {
+        "name": "BLT",
+        "price": "2 for 8"
       },
       {
         "name": "Breakfast Burrito",
