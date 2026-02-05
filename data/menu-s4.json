@@ -1,123 +1,123 @@
-{
-  "header": {
-    "title": "Hot Food / Cuisine Chaude"
-  },
-  "slideA": {
-    "fingerFoodsTitle": "Finger Foods / Amuses-gueules",
-    "partyPackTitle": "Party Pack / Plateau",
-    "partyPackDescription": "6 Mozza, 6 Zucchini, 3 Pizza Fingers, 6 Pickles",
-    "partyPackPrice": "29.99",
-    "poutineTitle": "Poutine",
-    "poutineAddonsTitle": "Add-ons / Ajouts",
-    "friedChickenTitle": "Fried Chicken / Poulet frit",
-    "hotDogsTitle": "Hot Dogs / Saucisse",
-    "sandwichWrapsTitle": "Sandwiches & Wraps",
-    "sandwichWrapsHeaders": ["Item", "Price", "+ Fries"]
-  },
-  "slideB": {
-    "friesTitle": "Fries / Frites",
-    "burgersTitle": "Burgers / Hambourgeois",
-    "chickenWingsTitle": "Chicken Wings (12) / Ailes de poulet",
-    "wingsFlavorsTitle": "Flavors / Saveurs",
-    "breakfastTitle": "Breakfast / Déjeuner",
-    "breakfastExtrasTitle": "Breakfast Extras",
-    "shawarmaTitle": "Shawarma, Fish & Salads",
-    "shawarmaSectionTitle": "Shawarma",
-    "fishSectionTitle": "Fish & Chips",
-    "saladsSectionTitle": "Salads",
-    "saladsHeaders": ["Item", "Small", "Large"]
-  },
-  "items": {
-    "fingerFoods": [
-      {"name": "Mozza Sticks (1)", "price": "1.52"},
-      {"name": "Onion Rings (1)", "price": "5.22"},
-      {"name": "Zucchini Sticks (1)", "price": "1.52"},
-      {"name": "Pizza Finger (1)", "price": "2.39"},
-      {"name": "Deep Fried Pickle (1)", "price": "1.52"},
-      {"name": "Popcorn Chicken (1)", "price": "6.96"},
-      {"name": "Chicken Finger (1)", "price": "2.75"}
-    ],
-    "poutine": [
-      {"name": "Small / Petit", "price": "6.09"},
-      {"name": "Medium / Moyen", "price": "7.83"},
-      {"name": "Large / Grande", "price": "9.57"},
-      {"name": "Family / Famille", "price": "13.05"}
-    ],
-    "poutineAddons": [
-      {"name": "+ Smoked Meat", "price": "6.49"},
-      {"name": "+ Ground Beef", "price": "3.99"}
-    ],
-    "friedChicken": [
-      {"name": "3 Pieces / morceaux", "price": "7.83"},
-      {"name": "3 Pieces + Fries", "price": "11.30"},
-      {"name": "6 Pieces / morceaux", "price": "13.92"},
-      {"name": "6 Pc + Fries", "price": "17.40"}
-    ],
-    "hotDogs": [
-      {"name": "Pogo", "price": "3.48"},
-      {"name": "Hot Dog", "price": "3.48"},
-      {"name": "Whistle Dog", "price": "4.35"}
-    ],
-    "sandwichWraps": [
-      {"name": "Chicken Caesar Wrap", "price": "6.99", "withFries": "10.99"},
-      {"name": "Chicken Bacon Ranch Wrap", "price": "6.99", "withFries": "10.99"},
-      {"name": "BLT", "price": "3.99", "withFries": "7.99"},
-      {"name": "Club Sandwich", "price": "9.57", "withFries": "13.57"},
-      {"name": "Grilled Cheese", "price": "3.99", "withFries": "4.99"},
-      {"name": "Hot Chicken", "price": "12.18", "withFries": "12.18"},
-      {"name": "Smoked Meat", "price": "8.69", "withFries": "12.18"}
-    ],
-    "fries": [
-      {"name": "Small / Petit", "price": "3.91"},
-      {"name": "Medium / Moyen", "price": "5.22"},
-      {"name": "Large / Grande", "price": "6.52"},
-      {"name": "Family / Famille", "price": "8.69"},
-      {"name": "Spicy Fries (M)", "price": "6.22"},
-      {"name": "Potato Wedges (M)", "price": "6.22"}
-    ],
-    "burgers": [
-      {"name": "Plain", "base": "5.22", "withFries": "8.69"},
-      {"name": "Cheese", "base": "6.62", "withFries": "10.00"},
-      {"name": "Bacon & Cheese", "base": "6.96", "withFries": "10.44"},
-      {"name": "Chicken", "base": "6.96", "withFries": "10.44"}
-    ],
-    "wingsFlavors": [
-      "Mild / Doux",
-      "Medium / Moyen",
-      "Hot / Épicé",
-      "Honey Garlic / Miel-Ail",
-      "Sweet Chili / Piment Sucré"
-    ],
-    "wingsSizes": [
-      {"name": "8 Wings", "price": "8.69"},
-      {"name": "12 Wings", "price": "12.18"},
-      {"name": "20 Wings", "price": "19.57"}
-    ],
-    "breakfastItems": [
-      {"name": "One Egg", "detail": "Choice of meat, home fries, toast, 12 oz coffee", "price": "4.29"},
-      {"name": "Two Eggs", "detail": "Choice of meat, home fries, toast, 12 oz coffee", "price": "5.19"},
-      {"name": "Hungry Man", "detail": "Three eggs, three meats, home fries, toast, 12 oz coffee", "price": "8.69"}
-    ],
-    "breakfastExtras": [
-      {"name": "Western", "price": "3.99"},
-      {"name": "Breakfast Burger", "price": "3.99"},
-      {"name": "Breakfast Burrito", "price": "5.99"},
-      {"name": "Plain Bagel w/ Cream Cheese", "price": "2.99"},
-      {"name": "Add Home Fries", "price": "2.49"}
-    ],
-    "shawarmaItems": [
-      {"name": "Chicken Shawarma (naan)", "price": "6.96", "withGarlic": "10.44"},
-      {"name": "Beef Shawarma (naan)", "price": "6.96", "withGarlic": "10.44"},
-      {"name": "Beef Gyros", "price": "6.96", "withGarlic": "10.44"},
-      {"name": "Chicken Shawarma Salad", "price": "10.44"}
-    ],
-    "fishItems": [
-      {"name": "1 Piece", "price": "11.32"},
-      {"name": "2 Pieces", "price": "15.22"}
-    ],
-    "saladSizes": [
-      {"name": "Garden Salad", "small": "5.99", "large": "9.99"},
-      {"name": "Caesar Salad", "small": "5.99", "large": "9.99"}
-    ]
-  }
-}
+{
+  "header": {
+    "title": "Hot Food / Cuisine Chaude"
+  },
+  "slideA": {
+    "fingerFoodsTitle": "Finger Foods / Amuses-gueules",
+    "partyPackTitle": "Party Pack / Plateau",
+    "partyPackDescription": "6 Mozza, 6 Zucchini, 3 Pizza Fingers, 6 Pickles",
+    "partyPackPrice": "29.99",
+    "poutineTitle": "Poutine",
+    "poutineAddonsTitle": "Add-ons / Ajouts",
+    "friedChickenTitle": "Fried Chicken / Poulet frit",
+    "hotDogsTitle": "Hot Dogs / Saucisse",
+    "sandwichWrapsTitle": "Sandwiches & Wraps",
+    "sandwichWrapsHeaders": ["Item", "Price", "+ Fries"]
+  },
+  "slideB": {
+    "friesTitle": "Fries / Frites",
+    "burgersTitle": "Burgers / Hambourgeois",
+    "chickenWingsTitle": "Chicken Wings (12) / Ailes de poulet",
+    "wingsFlavorsTitle": "Flavors / Saveurs",
+    "breakfastTitle": "Breakfast / DÃ©jeuner",
+    "breakfastExtrasTitle": "Breakfast Extras",
+    "shawarmaTitle": "Shawarma, Fish & Salads",
+    "shawarmaSectionTitle": "Shawarma",
+    "fishSectionTitle": "Fish & Chips",
+    "saladsSectionTitle": "Salads",
+    "saladsHeaders": ["Item", "Small", "Large"]
+  },
+  "items": {
+    "fingerFoods": [
+      {"name": "Mozza Sticks (1)", "price": "1.52"},
+      {"name": "Onion Rings (1)", "price": "5.22"},
+      {"name": "Zucchini Sticks (1)", "price": "1.52"},
+      {"name": "Pizza Finger (1)", "price": "2.39"},
+      {"name": "Deep Fried Pickle (1)", "price": "1.52"},
+      {"name": "Popcorn Chicken (1)", "price": "6.96"},
+      {"name": "Chicken Finger (1)", "price": "2.75"}
+    ],
+    "poutine": [
+      {"name": "Small / Petit", "price": "6.09"},
+      {"name": "Medium / Moyen", "price": "7.83"},
+      {"name": "Large / Grande", "price": "9.57"},
+      {"name": "Family / Famille", "price": "13.05"}
+    ],
+    "poutineAddons": [
+      {"name": "+ Smoked Meat", "price": "6.49"},
+      {"name": "+ Ground Beef", "price": "3.99"}
+    ],
+    "friedChicken": [
+      {"name": "3 Pieces / morceaux", "price": "7.83"},
+      {"name": "3 Pieces + Fries", "price": "11.30"},
+      {"name": "6 Pieces / morceaux", "price": "13.92"},
+      {"name": "6 Pc + Fries", "price": "17.40"}
+    ],
+    "hotDogs": [
+      {"name": "Pogo", "price": "3.48"},
+      {"name": "Hot Dog", "price": "3.48"},
+      {"name": "Whistle Dog", "price": "4.35"}
+    ],
+    "sandwichWraps": [
+      {"name": "Chicken Caesar Wrap", "price": "6.99", "withFries": "10.99"},
+      {"name": "Chicken Bacon Ranch Wrap", "price": "6.99", "withFries": "10.99"},
+      {"name": "BLT", "price": "3.99", "withFries": "7.99"},
+      {"name": "Club Sandwich", "price": "9.57", "withFries": "13.57"},
+      {"name": "Grilled Cheese", "price": "3.99", "withFries": "4.99"},
+      {"name": "Hot Chicken", "price": "12.18", "withFries": "12.18"},
+      {"name": "Smoked Meat", "price": "8.69", "withFries": "12.18"}
+    ],
+    "fries": [
+      {"name": "Small / Petit", "price": "3.91"},
+      {"name": "Medium / Moyen", "price": "5.22"},
+      {"name": "Large / Grande", "price": "6.52"},
+      {"name": "Family / Famille", "price": "8.69"},
+      {"name": "Spicy Fries (M)", "price": "6.22"},
+      {"name": "Potato Wedges (M)", "price": "6.22"}
+    ],
+    "burgers": [
+      {"name": "Plain", "base": "5.22", "withFries": "8.69"},
+      {"name": "Cheese", "base": "6.62", "withFries": "10.00"},
+      {"name": "Bacon & Cheese", "base": "6.96", "withFries": "10.44"},
+      {"name": "Chicken", "base": "6.96", "withFries": "10.44"}
+    ],
+    "wingsFlavors": [
+      "Mild / Doux",
+      "Medium / Moyen",
+      "Hot / pic",
+      "Honey Garlic / Miel-Ail",
+      "Sweet Chili / Piment Sucr"
+    ],
+    "wingsSizes": [
+      {"name": "8 Wings", "price": "8.69"},
+      {"name": "12 Wings", "price": "12.18"},
+      {"name": "20 Wings", "price": "19.57"}
+    ],
+    "breakfastItems": [
+      {"name": "One Egg", "detail": "Choice of meat, home fries, toast, 12 oz coffee", "price": "4.29"},
+      {"name": "Two Eggs", "detail": "Choice of meat, home fries, toast, 12 oz coffee", "price": "5.19"},
+      {"name": "Hungry Man", "detail": "Three eggs, three meats, home fries, toast, 12 oz coffee", "price": "8.69"}
+    ],
+    "breakfastExtras": [
+      {"name": "Western", "price": "3.99"},
+      {"name": "Breakfast Burger", "price": "3.99"},
+      {"name": "Breakfast Burrito", "price": "5.99"},
+      {"name": "Plain Bagel w/ Cream Cheese", "price": "2.99"},
+      {"name": "Add Home Fries", "price": "2.49"}
+    ],
+    "shawarmaItems": [
+      {"name": "Chicken Shawarma (naan)", "price": "6.96", "withGarlic": "10.44"},
+      {"name": "Beef Shawarma (naan)", "price": "6.96", "withGarlic": "10.44"},
+      {"name": "Beef Gyros", "price": "6.96", "withGarlic": "10.44"},
+      {"name": "Chicken Shawarma Salad", "price": "10.44"}
+    ],
+    "fishItems": [
+      {"name": "1 Piece", "price": "11.32"},
+      {"name": "2 Pieces", "price": "15.22"}
+    ],
+    "saladSizes": [
+      {"name": "Garden Salad", "small": "5.99", "large": "9.99"},
+      {"name": "Caesar Salad", "small": "5.99", "large": "9.99"}
+    ]
+  }
+}

@@ -173,7 +173,7 @@ export const defaultS4Data: S4Data = {
     burgersTitle: "Burgers / Hambourgeois",
     chickenWingsTitle: "Chicken Wings (12) / Ailes de poulet",
     wingsFlavorsTitle: "Flavors / Saveurs",
-    breakfastTitle: "Breakfast / Djeuner",
+    breakfastTitle: "Breakfast / Déjeuner",
     breakfastExtrasTitle: "Breakfast Extras",
     shawarmaTitle: "Shawarma, Fish & Salads",
     shawarmaSectionTitle: "Shawarma",

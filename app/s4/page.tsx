@@ -29,9 +29,15 @@ function updateItem<T extends object>(items: T[], index: number, patch: Partial<
   return items.map((item, idx) => (idx === index ? { ...item, ...patch } : item));
 }
 
+function normalizeS4Data(payload: S4Data): S4Data {
+  const raw = JSON.stringify(payload);
+  const cleaned = raw.replace(/DÃ©jeuner|D�jeuner|Djeuner/g, "Déjeuner");
+  return JSON.parse(cleaned) as S4Data;
+}
+
 function CardImage({ src, alt, className, overlayClassName }: ImageProps) {
   return (
-    <div className={cn("relative w-full h-[12vh] overflow-hidden", className)}>
+    <div className={cn("relative w-full h-[28vh] overflow-hidden", className)}>
       <img
         src={src}
         alt={alt}
@@ -106,8 +112,9 @@ export default function Screen4() {
       .then((response) => (response.ok ? response.json() : Promise.reject()))
       .then((payload: S4Data) => {
         if (!active) return;
-        resetData(payload);
-        lastSavedRef.current = payload;
+        const normalized = normalizeS4Data(payload);
+        resetData(normalized);
+        lastSavedRef.current = normalized;
         setSaveState("idle");
       })
       .catch(() => {
@@ -771,7 +778,7 @@ export default function Screen4() {
               <CardImage
                 src="/images/s4/burger.png"
                 alt="Burgers"
-                className="h-[12vh]"
+                className="h-[28vh]"
                 overlayClassName="from-background/60 via-background/30"
               />
               <MicroHeader>
@@ -858,11 +865,6 @@ export default function Screen4() {
                   </div>
                 ))}
               </div>
-              <CardImage
-                src="/images/s4/fries.png"
-                alt="Fries"
-                className="h-[10vh]"
-              />
               <MicroHeader>
                 {editMode ? (
                   <input
