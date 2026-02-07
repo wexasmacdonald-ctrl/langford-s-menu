@@ -26,13 +26,13 @@
     },
     {
       "nameEn": "Vegetarian",
-      "nameFr": "Végétarienne",
+      "nameFr": "VÃ©gÃ©tarienne",
       "image": "/images/pizzas/vegetarian.png",
       "prices": ["10.99", "19.13", "23.48", "25.22", "26.96"]
     },
     {
       "nameEn": "Hawaiian",
-      "nameFr": "Hawaïenne",
+      "nameFr": "HawaÃ¯enne",
       "image": "/images/pizzas/hawaiian.png",
       "prices": ["10.99", "19.13", "23.48", "25.22", "26.96"]
     }
@@ -73,9 +73,9 @@
   ],
   "addons": [
     { "nameEn": "Meat", "nameFr": "Viande", "prices": ["1.75", "2.25", "2.75", "3.50", "4.25"] },
-    { "nameEn": "Smoked Meat", "nameFr": "Viande fumée", "prices": ["6.49", "6.49", "10.99", "10.99", "14.99"] },
+    { "nameEn": "Smoked Meat", "nameFr": "Viande fumÃ©e", "prices": ["6.49", "6.49", "10.99", "10.99", "14.99"] },
     { "nameEn": "Cheese", "nameFr": "Fromage", "prices": ["1.75", "2.25", "2.75", "3.50", "4.25"] },
-    { "nameEn": "Vegetable", "nameFr": "Légume", "prices": ["1.00", "1.50", "2.00", "2.75", "3.50"] }
+    { "nameEn": "Vegetable", "nameFr": "LÃ©gume", "prices": ["1.00", "1.50", "2.00", "2.75", "3.50"] }
   ]
 }
-
+

@@ -14,6 +14,8 @@ type ImageProps = {
   alt: string;
   className?: string;
   overlayClassName?: string;
+  imageClassName?: string;
+  showOverlay?: boolean;
 };
 
 const inputBaseClass =
@@ -38,33 +40,59 @@ function formatPrice(value: string) {
   return trimmed;
 }
 
+function renderHighlighted(text: string) {
+  const normalized = text.replace(/&nbsp;/g, "\u00A0");
+  const parts = normalized.split(/\[\[(.*?)\]\]/g);
+  return parts.map((part, index) =>
+    index % 2 === 1 ? (
+      <span key={index} className="text-primary">
+        {part}
+      </span>
+    ) : (
+      <span key={index}>{part}</span>
+    )
+  );
+}
+
 function normalizeS4Data(payload: S4Data): S4Data {
   const raw = JSON.stringify(payload);
   const cleaned = raw.replace(/DÃ©jeuner|D�jeuner|Djeuner/g, "Déjeuner");
   return JSON.parse(cleaned) as S4Data;
 }
 
-function CardImage({ src, alt, className, overlayClassName }: ImageProps) {
+function CardImage({
+  src,
+  alt,
+  className,
+  overlayClassName,
+  imageClassName,
+  showOverlay = true,
+}: ImageProps) {
   return (
     <div className={cn("relative w-full h-[28vh] overflow-hidden", className)}>
       <img
         src={src}
         alt={alt}
-        className="absolute inset-0 w-full h-full object-cover"
-      />
-      <div
         className={cn(
-          "absolute inset-0 bg-gradient-to-t from-background/70 via-background/35 to-transparent",
-          overlayClassName
+          "absolute inset-0 w-full h-full object-cover",
+          imageClassName
         )}
       />
+      {showOverlay ? (
+        <div
+          className={cn(
+            "absolute inset-0 bg-gradient-to-t from-background/70 via-background/35 to-transparent",
+            overlayClassName
+          )}
+        />
+      ) : null}
     </div>
   );
 }
 
 function SectionCard({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-card rounded-[1vh] border border-border overflow-hidden flex flex-col min-h-0">
+    <div className="bg-card/85 rounded-[1vh] border border-border overflow-hidden flex flex-col min-h-0">
       {children}
     </div>
   );
@@ -91,7 +119,11 @@ function MicroHeader({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function Screen4() {
+type Screen4Props = {
+  showImageOverlay?: boolean;
+};
+
+export default function Screen4({ showImageOverlay = true }: Screen4Props) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const {
     state: data,
@@ -102,7 +134,7 @@ export default function Screen4() {
     canUndo,
     canRedo,
   } = useUndoRedo<S4Data>(defaultS4Data);
-  const [editMode, setEditMode] = useState(false);
+  const [editMode] = useState(false);
   const [showOverflow, setShowOverflow] = useState(false);
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [dirty, setDirty] = useState(false);
@@ -165,6 +197,13 @@ export default function Screen4() {
   }, [editMode, undo, redo, canUndo, canRedo]);
 
   useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % 2);
+    }, 10000);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
     const root = mainRef.current;
     if (!root) return;
     const candidates = root.querySelectorAll<HTMLElement>("*");
@@ -205,45 +244,14 @@ export default function Screen4() {
   return (
     <main
       ref={mainRef}
-      className="w-screen h-screen bg-background text-foreground flex flex-col overflow-hidden p-[1.5vh] relative s4-font-grow"
+      className="w-screen h-screen bg-background text-foreground flex flex-col overflow-hidden p-[1.5vh] relative menu-marble"
     >
-      <div className="absolute top-[1vh] right-[1.5vh] z-20 flex items-center gap-[0.6vh]">
-        <button
-          type="button"
-          onClick={() => setEditMode((prev) => !prev)}
-          className="text-[1.6vh] uppercase font-bold border border-border rounded px-[1vh] py-[0.4vh]"
-        >
-          {editMode ? "Done" : "Edit"}
-        </button>
-        <button
-          type="button"
-          onClick={() => setShowOverflow((prev) => !prev)}
-          className="text-[1.6vh] uppercase font-bold border border-border rounded px-[1vh] py-[0.4vh]"
-        >
-          {showOverflow ? "Overflow On" : "Overflow Off"}
-        </button>
-        <button
-          type="button"
-          onClick={saveChanges}
-          disabled={!dirty || saveState === "saving"}
-          className={cn(
-            "text-[1.6vh] uppercase font-bold border border-border rounded px-[1vh] py-[0.4vh]",
-            (!dirty || saveState === "saving") && "opacity-50 cursor-not-allowed"
-          )}
-        >
-          {saveState === "saving" ? "Saving..." : "Save"}
-        </button>
-        {saveState === "saved" ? (
-          <span className="text-[1.4vh] text-primary">Saved</span>
-        ) : null}
-        {saveState === "error" ? (
-          <span className="text-[1.4vh] text-destructive">Save failed</span>
-        ) : null}
-      </div>
+      {null}
 
       <div className="text-center shrink-0 mb-[1vh]">
         {editMode ? (
           <input
+            data-fixed-size="true"
             value={data.header.title}
             onChange={(event) =>
               updateData((prev) => ({
@@ -253,20 +261,20 @@ export default function Screen4() {
             }
             className={cn(
               inputBaseClass,
-              "text-center w-full text-[5.4vh] font-bold uppercase tracking-wider text-primary border-primary/40"
+              "text-center w-full text-[6vh] font-bold uppercase tracking-wider text-primary border-primary/40"
             )}
           />
         ) : (
-          <h1 className="font-[family-name:var(--font-heading)] text-[5.4vh] font-bold text-primary uppercase tracking-wider">
+          <h1
+            data-fixed-size="true"
+            className="font-[family-name:var(--font-heading)] text-[6vh] font-bold text-primary uppercase tracking-wider"
+          >
             {data.header.title}
           </h1>
         )}
-        <p className="text-muted-foreground text-[2.4vh]">
-          Snackables, favorites, and classics
-        </p>
       </div>
 
-      <div className="relative flex-1 min-h-0">
+      <div className="relative flex-1 min-h-0 s4-font-grow">
         <div
           className={cn(
             "absolute inset-0 transition-all duration-500 ease-in-out",
@@ -275,9 +283,13 @@ export default function Screen4() {
               : "opacity-0 -translate-x-full pointer-events-none"
           )}
         >
-          <div className="h-full grid grid-cols-[1fr_1fr_1fr_1.35fr] gap-[1.2vh]">
+          <div className="h-full grid grid-cols-4 gap-[1.2vh]">
             <SectionCard>
-              <CardImage src="/images/s4/finger-foods.png" alt="Finger foods" />
+              <CardImage
+                src="/images/s4/finger-foods.png"
+                alt="Finger foods"
+                showOverlay={showImageOverlay}
+              />
               <CardHeader className="text-[1.9vh]">
                 {editMode ? (
                   <input
@@ -294,7 +306,7 @@ export default function Screen4() {
                     className={cn(inputBaseClass, "w-full text-primary border-primary/40")}
                   />
                 ) : (
-                  data.slideA.fingerFoodsTitle
+                  renderHighlighted(data.slideA.fingerFoodsTitle)
                 )}
               </CardHeader>
               <div className="flex-1 min-h-0 overflow-y-auto px-[1vh] py-[0.8vh] space-y-[0.6vh]">
@@ -355,7 +367,7 @@ export default function Screen4() {
                         className={cn(inputBaseClass, "w-full text-primary border-primary/40")}
                       />
                     ) : (
-                      data.slideA.partyPackTitle
+                      renderHighlighted(data.slideA.partyPackTitle)
                     )}
                   </div>
                   {editMode ? (
@@ -397,7 +409,11 @@ export default function Screen4() {
               </div>
             </SectionCard>
             <SectionCard>
-              <CardImage src="/images/s4/poutine.png" alt="Poutine" />
+              <CardImage
+                src="/images/s4/poutine.png"
+                alt="Poutine"
+                showOverlay={showImageOverlay}
+              />
               <CardHeader>
                 {editMode ? (
                   <input
@@ -411,7 +427,7 @@ export default function Screen4() {
                     className={cn(inputBaseClass, "w-full text-primary border-primary/40")}
                   />
                 ) : (
-                  data.slideA.poutineTitle
+                  renderHighlighted(data.slideA.poutineTitle)
                 )}
               </CardHeader>
               <div className="flex-1 min-h-0 overflow-y-auto px-[1vh] py-[0.8vh] space-y-[0.6vh]">
@@ -472,7 +488,7 @@ export default function Screen4() {
                         className={cn(inputBaseClass, "w-full text-muted-foreground")}
                       />
                     ) : (
-                      data.slideA.poutineAddonsTitle
+                      renderHighlighted(data.slideA.poutineAddonsTitle)
                     )}
                   </div>
                   <div className="mt-[0.4vh] space-y-[0.4vh]">
@@ -524,7 +540,12 @@ export default function Screen4() {
             </SectionCard>
 
             <SectionCard>
-              <CardImage src="/images/s4/fried-chicken.png" alt="Fried chicken" />
+              <CardImage
+                src="/images/s4/fried-chicken.png"
+                alt="Fried chicken"
+                imageClassName="object-contain scale-[2] -translate-y-[35px] origin-center"
+                showOverlay={showImageOverlay}
+              />
               <div className="flex-1 min-h-0 overflow-y-auto">
                 <MicroHeader>
                   {editMode ? (
@@ -538,9 +559,9 @@ export default function Screen4() {
                       }
                       className={cn(inputBaseClass, "w-full text-primary-foreground border-white/30")}
                     />
-                  ) : (
-                    data.slideA.friedChickenTitle
-                  )}
+                ) : (
+                  renderHighlighted(data.slideA.friedChickenTitle)
+                )}
                 </MicroHeader>
                 <div className="px-[1vh] py-[0.8vh] space-y-[0.6vh]">
                   {data.items.friedChicken.map((item, index) => (
@@ -602,9 +623,9 @@ export default function Screen4() {
                       }
                       className={cn(inputBaseClass, "w-full text-primary-foreground border-white/30")}
                     />
-                  ) : (
-                    data.slideB.chickenWingsTitle
-                  )}
+                ) : (
+                  renderHighlighted(data.slideB.chickenWingsTitle)
+                )}
                 </MicroHeader>
                 <div className="px-[1vh] py-[0.8vh] space-y-[0.6vh]">
                   {data.items.wingsSizes.map((item, index) => (
@@ -654,7 +675,11 @@ export default function Screen4() {
             </SectionCard>
 
             <SectionCard>
-              <CardImage src="/images/s4/sandwiches.png" alt="Sandwiches and wraps" />
+              <CardImage
+                src="/images/s4/sandwiches.png"
+                alt="Sandwiches and wraps"
+                showOverlay={showImageOverlay}
+              />
               <CardHeader>
                 {editMode ? (
                   <input
@@ -668,7 +693,7 @@ export default function Screen4() {
                     className={cn(inputBaseClass, "w-full text-primary border-primary/40")}
                   />
                 ) : (
-                  data.slideA.sandwichWrapsTitle
+                  renderHighlighted(data.slideA.sandwichWrapsTitle)
                 )}
               </CardHeader>
               <div className="flex-1 min-h-0 overflow-y-auto px-[1vh] py-[0.8vh]">
@@ -803,7 +828,7 @@ export default function Screen4() {
                     </div>
                   ))}
                 </div>
-                <MicroHeader>{data.slideA.hotDogsTitle}</MicroHeader>
+                <MicroHeader>{renderHighlighted(data.slideA.hotDogsTitle)}</MicroHeader>
                 <div className="mt-[0.6vh] space-y-[0.6vh]">
                   {data.items.hotDogs.map((item, index) => (
                     <div key={index} className={listRowClass}>
@@ -860,13 +885,15 @@ export default function Screen4() {
               : "opacity-0 translate-x-full pointer-events-none"
           )}
         >
-          <div className="h-full grid grid-cols-[1fr_1.15fr_1.15fr] gap-[1.2vh]">
+          <div className="h-full grid grid-cols-3 gap-[1.2vh]">
             <SectionCard>
               <CardImage
                 src="/images/s4/burger.png"
                 alt="Burgers"
                 className="h-[28vh]"
                 overlayClassName="from-background/60 via-background/30"
+                imageClassName="object-contain scale-[1.4] -translate-y-[20px] origin-center"
+                showOverlay={showImageOverlay}
               />
               <MicroHeader>
                 {editMode ? (
@@ -881,7 +908,7 @@ export default function Screen4() {
                     className={cn(inputBaseClass, "w-full text-primary-foreground border-white/30")}
                   />
                 ) : (
-                  data.slideB.burgersTitle
+                  renderHighlighted(data.slideB.burgersTitle)
                 )}
               </MicroHeader>
               <div className="px-[1vh] py-[0.8vh] space-y-[0.6vh]">
@@ -965,7 +992,7 @@ export default function Screen4() {
                     className={cn(inputBaseClass, "w-full text-primary-foreground border-white/30")}
                   />
                 ) : (
-                  data.slideB.friesTitle
+                  renderHighlighted(data.slideB.friesTitle)
                 )}
               </MicroHeader>
               <div className="flex-1 min-h-0 overflow-y-auto px-[1vh] py-[0.8vh] space-y-[0.6vh]">
@@ -1015,7 +1042,12 @@ export default function Screen4() {
             </SectionCard>
 
             <SectionCard>
-              <CardImage src="/images/s4/breakfast.png" alt="Breakfast" />
+              <CardImage
+                src="/images/s4/breakfast.png"
+                alt="Breakfast"
+                imageClassName="object-contain scale-[2] translate-y-[10px] origin-center"
+                showOverlay={showImageOverlay}
+              />
               <CardHeader>
                 {editMode ? (
                   <input
@@ -1029,7 +1061,7 @@ export default function Screen4() {
                     className={cn(inputBaseClass, "w-full text-primary border-primary/40")}
                   />
                 ) : (
-                  data.slideB.breakfastTitle
+                  renderHighlighted(data.slideB.breakfastTitle)
                 )}
               </CardHeader>
               <div className="flex-1 min-h-0 overflow-y-auto px-[1vh] py-[0.8vh] space-y-[0.6vh]">
@@ -1100,7 +1132,7 @@ export default function Screen4() {
                 ))}
 
                 <div className="pt-[0.6vh] border-t border-border/40">
-                  <div className="text-[1.3vh] uppercase text-muted-foreground font-bold">
+                  <div className="mt-[0.4vh] grid grid-cols-[1fr_auto_auto] gap-x-[1vh] text-[1.4vh] text-muted-foreground font-bold">
                     {editMode ? (
                       <input
                         value={data.slideB.breakfastExtrasTitle}
@@ -1110,15 +1142,17 @@ export default function Screen4() {
                             slideB: { ...prev.slideB, breakfastExtrasTitle: event.target.value },
                           }))
                         }
-                        className={cn(inputBaseClass, "w-full text-muted-foreground")}
+                        className={cn(inputBaseClass, "w-full text-muted-foreground font-bold")}
                       />
                     ) : (
-                      data.slideB.breakfastExtrasTitle
+                      <span>{renderHighlighted(data.slideB.breakfastExtrasTitle)}</span>
                     )}
+                    <span className="text-right" />
+                    <span className="text-right" />
                   </div>
                   <div className="mt-[0.4vh] space-y-[0.4vh]">
                     {data.items.breakfastExtras.map((item, index) => (
-                      <div key={index} className={listRowClass}>
+                      <div key={index} className="grid grid-cols-[1fr_auto_auto] gap-x-[1vh] items-center text-[1.6vh]">
                         {editMode ? (
                           <input
                             value={item.name}
@@ -1133,30 +1167,54 @@ export default function Screen4() {
                                 },
                               }))
                             }
-                            className={cn(inputBaseClass, "w-full")}
-                          />
-                        ) : (
-                          <span>{item.name}</span>
-                        )}
-                      {editMode ? (
-                        <input
-                          value={item.price}
-                          onChange={(event) =>
-                            updateData((prev) => ({
-                              ...prev,
-                              items: {
-                                ...prev.items,
-                                breakfastExtras: updateItem(prev.items.breakfastExtras, index, {
-                                  price: event.target.value,
-                                }),
-                              },
-                            }))
-                          }
-                          className={cn(inputBaseClass, "w-[10vh] text-right text-primary font-bold")}
+                          className={cn(inputBaseClass, "w-full")}
                         />
                       ) : (
-                        <span className="text-primary font-bold">{item.price}</span>
+                        <span>{item.name}</span>
                       )}
+                      {editMode ? (
+                        <>
+                          <input
+                            value={item.price}
+                            onChange={(event) =>
+                              updateData((prev) => ({
+                                ...prev,
+                                items: {
+                                  ...prev.items,
+                                  breakfastExtras: updateItem(prev.items.breakfastExtras, index, {
+                                    price: event.target.value,
+                                  }),
+                                },
+                              }))
+                            }
+                            className={cn(inputBaseClass, "w-[10vh] text-right text-primary font-bold")}
+                          />
+                          <input
+                            value={item.forPrice ?? ""}
+                            onChange={(event) =>
+                              updateData((prev) => ({
+                                ...prev,
+                                items: {
+                                  ...prev.items,
+                                  breakfastExtras: updateItem(prev.items.breakfastExtras, index, {
+                                    forPrice: event.target.value,
+                                  }),
+                                },
+                              }))
+                            }
+                            className={cn(inputBaseClass, "w-[10vh] text-right text-primary font-bold")}
+                          />
+                        </>
+                      ) : (
+                        <>
+                        <span className="text-primary font-bold text-right w-[10vh]">
+                          {item.price}
+                        </span>
+                        <span className="text-primary font-bold text-right w-[10vh]">
+                          {item.forPrice ?? ""}
+                        </span>
+                      </>
+                    )}
                       </div>
                     ))}
                   </div>
@@ -1164,7 +1222,11 @@ export default function Screen4() {
               </div>
             </SectionCard>
             <SectionCard>
-              <CardImage src="/images/s4/shawarma.png" alt="Shawarma" />
+              <CardImage
+                src="/images/s4/shawarma.png"
+                alt="Shawarma"
+                showOverlay={showImageOverlay}
+              />
               <CardHeader>
                 {editMode ? (
                   <input
@@ -1178,28 +1240,22 @@ export default function Screen4() {
                     className={cn(inputBaseClass, "w-full text-primary border-primary/40")}
                   />
                 ) : (
-                  data.slideB.shawarmaSectionTitle
+                  renderHighlighted(data.slideB.shawarmaSectionTitle)
                 )}
               </CardHeader>
               <div className="flex-1 min-h-0 overflow-y-auto px-[1vh] py-[0.8vh] space-y-[0.6vh]">
                 <div>
-                  <div className="mt-[0.6vh] grid grid-cols-[minmax(0,1fr)_6.5vh_6.5vh] gap-x-[0.6vh]">
+                  <div className="mt-[0.6vh] flex items-center justify-between">
                     <span className={tableHeaderClass}>Shawarma</span>
-                    <span
-                      className={cn(
-                        tableHeaderClass,
-                        "text-right whitespace-nowrap transform -translate-x-[50px] inline-block"
-                      )}
-                    >
-                      Price + Garlic<br />potatoes
+                    <span className={cn(tableHeaderClass, "whitespace-nowrap")}>
+                      Price + Garlic Potatoes
                     </span>
-                    <span />
                   </div>
                   <div className="mt-[0.4vh] space-y-[0.6vh]">
                     {data.items.shawarmaItems.map((item, index) => (
                       <div
                         key={index}
-                        className="grid grid-cols-[minmax(0,1fr)_6.5vh_6.5vh] gap-x-[0.6vh] items-center text-[1.5vh]"
+                        className="grid grid-cols-[minmax(0,1fr)_6.5vh_8vh] gap-x-[0.6vh] items-center text-[1.5vh]"
                       >
                         {editMode ? (
                           <input
@@ -1222,36 +1278,6 @@ export default function Screen4() {
                         )}
                         {editMode ? (
                           <input
-                            value={item.withGarlic ?? ""}
-                            onChange={(event) =>
-                              updateData((prev) => ({
-                                ...prev,
-                                items: {
-                                  ...prev.items,
-                                  shawarmaItems: updateItem(prev.items.shawarmaItems, index, {
-                                    withGarlic: event.target.value,
-                                  }),
-                                },
-                              }))
-                            }
-                            className={cn(
-                              inputBaseClass,
-                              "w-[7vh] text-right text-primary font-bold whitespace-nowrap transform -translate-x-[50px]",
-                              item.withGarlic ? "" : "invisible"
-                            )}
-                          />
-                        ) : (
-                          <span
-                            className={cn(
-                              "text-primary font-bold transform -translate-x-[50px] inline-block",
-                              item.withGarlic ? "" : "invisible"
-                            )}
-                          >
-                            {item.withGarlic ? `$${item.withGarlic}` : ""}
-                          </span>
-                        )}
-                        {editMode ? (
-                          <input
                             value={item.price}
                             onChange={(event) =>
                               updateData((prev) => ({
@@ -1264,22 +1290,34 @@ export default function Screen4() {
                                 },
                               }))
                             }
-                            placeholder=""
-                            className={cn(
-                              inputBaseClass,
-                              "w-[7vh] text-right text-primary font-bold whitespace-nowrap",
-                              !item.withGarlic ? "transform -translate-x-[110px]" : ""
-                            )}
+                            className={cn(inputBaseClass, "w-full text-right text-primary font-bold whitespace-nowrap")}
                           />
                         ) : (
-                          <span
-                            className={cn(
-                              "text-primary font-bold whitespace-nowrap",
-                              !item.withGarlic ? "transform -translate-x-[110px] inline-block" : ""
-                            )}
-                          >
-                            ${item.price}
-                          </span>
+                          <span className="text-primary font-bold whitespace-nowrap">${item.price}</span>
+                        )}
+                        {editMode ? (
+                          <input
+                            value={item.withGarlic ?? ""}
+                            onChange={(event) =>
+                              updateData((prev) => ({
+                                ...prev,
+                                items: {
+                                  ...prev.items,
+                                  shawarmaItems: updateItem(prev.items.shawarmaItems, index, {
+                                    withGarlic: event.target.value,
+                                  }),
+                                },
+                              }))
+                            }
+                            placeholder=""
+                            className={cn(inputBaseClass, "w-full text-right text-primary font-bold whitespace-nowrap")}
+                          />
+                        ) : (
+                          item.withGarlic ? (
+                            <span className="text-primary font-bold whitespace-nowrap">${item.withGarlic}</span>
+                          ) : (
+                            <span />
+                          )
                         )}
                       </div>
                     ))}
@@ -1300,7 +1338,7 @@ export default function Screen4() {
                         className={cn(inputBaseClass, "w-full text-primary-foreground border-white/30")}
                       />
                     ) : (
-                      data.slideB.fishSectionTitle
+                      renderHighlighted(data.slideB.fishSectionTitle)
                     )}
                   </MicroHeader>
                   <div className="mt-[0.6vh] space-y-[0.6vh]">
@@ -1363,7 +1401,7 @@ export default function Screen4() {
                         className={cn(inputBaseClass, "w-full text-primary-foreground border-white/30")}
                       />
                     ) : (
-                      data.slideB.saladsSectionTitle
+                      renderHighlighted(data.slideB.saladsSectionTitle)
                     )}
                   </MicroHeader>
                   <div className="mt-[0.6vh] grid grid-cols-[1fr_auto_auto] gap-x-[1vh]">

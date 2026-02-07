@@ -3,17 +3,18 @@
 import { useDaypart, type DayOfWeek } from "@/hooks/use-daypart";
 import { MenuFooter } from "@/components/menu/menu-footer";
 import { DaypartToggle } from "@/components/menu/daypart-toggle";
+import { DayOfWeekToggle } from "@/components/menu/day-of-week-toggle";
 import Image from "next/image";
 
 const dailySpecials: Record<
   DayOfWeek,
   { nameEn: string; nameFr: string; image: string } | null
 > = {
-  monday: { nameEn: "Hamburger Platter", nameFr: "Assiette hamburger", image: "/images/hamburger-platter.jpg" },
-  tuesday: { nameEn: "Smoked Meat Platter", nameFr: "Assiette sandwich à la viande fumée", image: "/images/smoked-meat-platter.jpg" },
-  wednesday: { nameEn: "8 Chicken Wings Platter", nameFr: "Assiette 8 ailes de poulet", image: "/images/chicken-wings-platter.jpg" },
-  thursday: { nameEn: "Chicken Finger Platter", nameFr: "Assiette doigts de poulet", image: "/images/chicken-finger-platter.jpg" },
-  friday: { nameEn: "Fish & Chips", nameFr: "Fish & Chips", image: "/images/fish-and-chips.jpg" },
+  monday: { nameEn: "Hamburger Platter", nameFr: "Assiette hamburger", image: "/images/hamburger-platter.png" },
+  tuesday: { nameEn: "Smoked Meat Platter", nameFr: "Assiette sandwich à la viande fumée", image: "/images/smoked-meat-platter.png" },
+  wednesday: { nameEn: "8 Chicken Wings Platter", nameFr: "Assiette 8 ailes de poulet", image: "/images/chicken-wings-platter.png" },
+  thursday: { nameEn: "Chicken Finger Platter", nameFr: "Assiette doigts de poulet", image: "/images/chicken-finger-platter.png" },
+  friday: { nameEn: "Fish & Chips", nameFr: "Fish & Chips", image: "/images/fish-and-chips.png" },
   saturday: null,
   sunday: null,
 };
@@ -29,7 +30,14 @@ const dayNamesFr: Record<DayOfWeek, string> = {
 };
 
 export default function Screen1() {
-  const { isBreakfast, dayOfWeek, daypartOverride, setDaypartOverride } = useDaypart();
+  const {
+    isBreakfast,
+    dayOfWeek,
+    daypartOverride,
+    setDaypartOverride,
+    dayOverride,
+    setDayOverride,
+  } = useDaypart();
   const todaySpecial = dailySpecials[dayOfWeek];
   const hasSpecialToday = todaySpecial !== null;
 
@@ -38,16 +46,17 @@ export default function Screen1() {
     dayOfWeek === "thursday" ||
     dayOfWeek === "friday";
 
-  const daypartToggle = (
-    <div className="absolute top-[1vh] right-[1.5vh] z-20">
+  const controlToggles = (
+    <div className="absolute top-[1vh] right-[1.5vh] z-20 flex flex-col items-end gap-[0.5vh]">
       <DaypartToggle value={daypartOverride} onChange={setDaypartOverride} />
+      <DayOfWeekToggle value={dayOverride} onChange={setDayOverride} />
     </div>
   );
 
   if (isBreakfast) {
     return (
-      <main className="relative w-screen h-screen bg-background text-foreground flex flex-col overflow-hidden p-[1.5vh]">
-        {daypartToggle}
+      <main className="relative w-screen h-screen bg-background text-foreground flex flex-col overflow-hidden p-[1.5vh] menu-marble">
+        {controlToggles}
         {/* Header */}
         <div className="text-center shrink-0 mb-[1vh]">
           <h1 className="font-[family-name:var(--font-heading)] text-[6vh] font-bold text-primary uppercase tracking-wider">
@@ -129,8 +138,8 @@ export default function Screen1() {
   // Weekend layout (no daily special) - show all specials with photos
   if (!hasSpecialToday) {
     return (
-      <main className="relative w-screen h-screen bg-background text-foreground flex flex-col overflow-hidden p-[1.5vh]">
-        {daypartToggle}
+      <main className="relative w-screen h-screen bg-background text-foreground flex flex-col overflow-hidden p-[1.5vh] menu-marble">
+        {controlToggles}
         {/* Header */}
         <div className="text-center shrink-0 mb-[1vh]">
           <h1 className="font-[family-name:var(--font-heading)] text-[6vh] font-bold text-primary uppercase tracking-wider">
@@ -139,12 +148,12 @@ export default function Screen1() {
           <p className="text-muted-foreground text-[3vh]">Spéciaux et Promotions - All specials include 355ml beverage</p>
         </div>
 
-        {/* Content - 3 columns with big photos */}
-        <div className="flex-1 min-h-0 grid grid-cols-3 gap-[1.5vh]">
+        {/* Content - 2 columns with big photos */}
+        <div className="flex-1 min-h-0 grid grid-cols-2 gap-[1.5vh]">
           {/* Left - Everyday Pizza Deal */}
           <div className="relative rounded-[1vh] overflow-hidden">
             <Image
-              src="/images/pizza-pepperoni.jpg"
+              src="/images/pizza-pepperoni.png"
               alt="9 inch Pizza"
               fill
               className="object-cover"
@@ -159,34 +168,8 @@ export default function Screen1() {
               </h3>
               <p className="text-[2.5vh] text-muted-foreground">Pizza 9&quot; de votre choix</p>
               <p className="text-[2.2vh] text-muted-foreground">+ 355ml beverage</p>
-              <p className="text-[8vh] font-bold text-primary">$8.69</p>
+              <p className="text-[8vh] font-bold text-primary">$10.44</p>
             </div>
-          </div>
-
-          {/* Middle - Daily Specials List with mini photos */}
-          <div className="flex flex-col gap-[1vh] min-h-0">
-            {(["monday", "tuesday", "wednesday", "thursday", "friday"] as DayOfWeek[]).map(
-              (day) => {
-                const special = dailySpecials[day];
-                if (!special) return null;
-                return (
-                  <div key={day} className="relative flex-1 rounded-[0.8vh] overflow-hidden">
-                    <Image src={special.image} alt={special.nameEn} fill className="object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/60 to-transparent" />
-                    <div className="absolute inset-0 flex items-center p-[1.5vh]">
-                      <div className="flex-1">
-                        <p className="text-[2vh] uppercase font-bold text-primary">
-                          {day.charAt(0).toUpperCase() + day.slice(1)} / {dayNamesFr[day]}
-                        </p>
-                        <p className="text-[2.8vh] font-bold text-foreground">{special.nameEn}</p>
-                        <p className="text-[1.8vh] text-muted-foreground">{special.nameFr}</p>
-                      </div>
-                      <p className="text-[4vh] font-bold text-primary">$8.69</p>
-                    </div>
-                  </div>
-                );
-              }
-            )}
           </div>
 
           {/* Right - BOGO Pizza with photo */}
@@ -199,7 +182,11 @@ export default function Screen1() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-[2vh]">
-              <span className="bg-accent text-accent-foreground text-[2.5vh] font-bold px-[1.2vh] py-[0.4vh] rounded-full uppercase">
+              <span
+                className={`text-[2.5vh] font-bold px-[1.2vh] py-[0.4vh] rounded-full uppercase ${
+                  isPizzaPromoDay ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground"
+                }`}
+              >
                 Wed / Thu / Fri Only
               </span>
               <p className="text-[2vh] text-muted-foreground mt-[0.5vh]">Mer / Jeu / Ven seulement</p>
@@ -208,8 +195,8 @@ export default function Screen1() {
               </h2>
               <p className="text-[2.5vh] text-foreground">Achetez 1, obtenez la 2e GRATUITE</p>
               <p className="text-[2.2vh] text-muted-foreground mt-[0.5vh]">14&quot; Pepperoni & Cheese Pizza</p>
-              <p className="text-[7vh] font-bold text-primary">$22.61</p>
-              <p className="text-[2vh] text-muted-foreground">for both pizzas / pour les deux</p>
+              <p className="text-[8vh] font-bold text-primary">$22.61</p>
+              
             </div>
           </div>
         </div>
@@ -221,16 +208,16 @@ export default function Screen1() {
 
   // Weekday layout - Today's special with big photo
   return (
-    <main className="relative w-screen h-screen bg-background text-foreground flex flex-col overflow-hidden p-[1.5vh]">
-      {daypartToggle}
+    <main className="relative w-screen h-screen bg-background text-foreground flex flex-col overflow-hidden p-[1.5vh] menu-marble">
+      {controlToggles}
       {/* Header */}
       <div className="text-center shrink-0 mb-[1vh]">
         <h1 className="font-[family-name:var(--font-heading)] text-[6vh] font-bold text-primary uppercase tracking-wider">
           Daily Specials / Spéciaux du jour
         </h1>
-        <p className="text-muted-foreground text-[3vh]">
+        <span className="inline-block mt-[0.6vh] bg-accent text-accent-foreground text-[2.5vh] font-bold px-[1vh] py-[0.3vh] rounded-full">
           All specials include a 355ml beverage / Tous les spéciaux incluent un breuvage 355ml
-        </p>
+        </span>
       </div>
 
       {/* Content - 3 big photo columns */}
@@ -242,6 +229,12 @@ export default function Screen1() {
             alt={todaySpecial.nameEn}
             fill
             className="object-cover"
+            style={{
+              objectPosition:
+                dayOfWeek === "monday" || dayOfWeek === "tuesday"
+                  ? "center -70px"
+                  : "center",
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-[2vh]">
@@ -257,14 +250,14 @@ export default function Screen1() {
               {todaySpecial.nameEn}
             </h2>
             <p className="text-[3vh] text-muted-foreground">{todaySpecial.nameFr}</p>
-            <p className="text-[9vh] font-bold text-primary">$8.69</p>
+            <p className="text-[8vh] font-bold text-primary">$10.44</p>
           </div>
         </div>
 
         {/* Middle - Everyday Pizza Deal */}
         <div className="relative rounded-[1vh] overflow-hidden">
           <Image
-            src="/images/pizza-pepperoni.jpg"
+            src="/images/pizza-pepperoni.png"
             alt="9 inch Pizza"
             fill
             className="object-cover"
@@ -279,7 +272,7 @@ export default function Screen1() {
             </h3>
             <p className="text-[2.5vh] text-muted-foreground">Pizza 9&quot; de votre choix</p>
             <p className="text-[2.2vh] text-muted-foreground">+ 355ml beverage</p>
-            <p className="text-[8vh] font-bold text-primary">$8.69</p>
+            <p className="text-[8vh] font-bold text-primary">$10.44</p>
           </div>
         </div>
 
@@ -305,9 +298,9 @@ export default function Screen1() {
               Buy 1 Get 2nd FREE
             </h3>
             <p className="text-[2.5vh] text-muted-foreground">Achetez 1, obtenez la 2e GRATUITE</p>
-            <p className="text-[2vh] text-muted-foreground mt-[0.5vh]">14&quot; Pepperoni & Cheese</p>
-            <p className="text-[7vh] font-bold text-primary">$22.61</p>
-            <p className="text-[2vh] text-muted-foreground">for both / pour les deux</p>
+            <p className="text-[2.8vh] text-muted-foreground mt-[0.5vh]">14&quot; Pepperoni & Cheese</p>
+            <p className="text-[8vh] font-bold text-primary">$22.61</p>
+            
           </div>
         </div>
       </div>

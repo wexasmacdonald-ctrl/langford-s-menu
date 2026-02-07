@@ -76,6 +76,7 @@ export type BreakfastItem = {
 export type BreakfastExtra = {
   name: string;
   price: string;
+  forPrice?: string;
 };
 
 export type ShawarmaItem = {
@@ -98,6 +99,7 @@ export type SaladSizeItem = {
 export type S4Data = {
   header: {
     title: string;
+    titleSize?: string;
   };
   slideA: {
     fingerFoodsTitle: string;

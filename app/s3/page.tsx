@@ -101,7 +101,7 @@ type SectionCardProps = {
 
 function SectionCard({ title, children }: SectionCardProps) {
   return (
-    <div className="bg-card rounded-[1vh] border border-border overflow-hidden flex flex-col min-h-0 p-[1.2vh]">
+    <div className="bg-card/80 rounded-[1vh] border border-border overflow-hidden flex flex-col min-h-0 p-[1.2vh]">
       {title ? (
         <h2 className="font-[family-name:var(--font-heading)] text-[3vh] font-bold text-primary uppercase border-b border-border pb-[0.4vh] mb-[0.8vh]">
           {title}
@@ -143,7 +143,7 @@ export default function Screen3() {
     canUndo,
     canRedo,
   } = useUndoRedo<S3Data>(defaultS3Data);
-  const [editMode, setEditMode] = useState(false);
+  const [editMode] = useState(false);
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [dirty, setDirty] = useState(false);
   const lastSavedRef = useRef<S3Data>(defaultS3Data);
@@ -202,6 +202,13 @@ export default function Screen3() {
     return () => window.removeEventListener("keydown", handleKeydown);
   }, [editMode, undo, redo, canUndo, canRedo]);
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % 2);
+    }, 10000);
+    return () => clearInterval(timer);
+  }, []);
+
   const saveChanges = async () => {
     setSaveState("saving");
     try {
@@ -224,39 +231,13 @@ export default function Screen3() {
   const premiumGroups = chunkWithStart(data.premiumPizzas, 2);
 
   return (
-    <main className="w-screen h-screen bg-background text-foreground flex flex-col overflow-hidden p-[1.5vh] relative">
-      <div className="absolute top-[1vh] right-[1.5vh] z-20 flex items-center gap-[0.6vh]">
-        <button
-          type="button"
-          onClick={() => setEditMode((prev) => !prev)}
-          className="text-[1.6vh] uppercase font-bold border border-border rounded px-[1vh] py-[0.4vh]"
-        >
-          {editMode ? "Done" : "Edit"}
-        </button>
-        <button
-          type="button"
-          onClick={saveChanges}
-          disabled={!dirty || saveState === "saving"}
-          className={cn(
-            "text-[1.6vh] uppercase font-bold border border-border rounded px-[1vh] py-[0.4vh]",
-            (!dirty || saveState === "saving") && "opacity-50 cursor-not-allowed"
-          )}
-        >
-          {saveState === "saving" ? "Saving..." : "Save"}
-        </button>
-        {saveState === "saved" ? (
-          <span className="text-[1.4vh] text-primary">Saved</span>
-        ) : null}
-        {saveState === "error" ? (
-          <span className="text-[1.4vh] text-destructive">Save failed</span>
-        ) : null}
-      </div>
+    <main className="w-screen h-screen bg-background text-foreground flex flex-col overflow-hidden p-[1.5vh] relative menu-marble">
+      {null}
 
       <div className="text-center shrink-0 mb-[1vh]">
         <h1 className="font-[family-name:var(--font-heading)] text-[6vh] font-bold text-primary uppercase tracking-wider">
           Pizza Menu / Menu Pizza
         </h1>
-        <p className="text-muted-foreground text-[3vh]">Classic, premium, and add-ons</p>
       </div>
 
       <div className="relative flex-1 min-h-0">
@@ -284,7 +265,7 @@ export default function Screen3() {
                             <img
                               src={pizza.image}
                               alt={pizza.nameEn}
-                              className="absolute inset-0 w-full h-full object-cover scale-125"
+                              className="absolute inset-0 w-full h-full object-cover scale-105"
                             />
                           ) : null}
                           <div className="absolute inset-0 bg-gradient-to-t from-background/75 via-background/35 to-transparent" />
@@ -449,7 +430,7 @@ export default function Screen3() {
                             <img
                               src={pizza.image}
                               alt={pizza.nameEn}
-                              className="absolute inset-0 w-full h-full object-cover scale-125"
+                              className="absolute inset-0 w-full h-full object-cover scale-105"
                             />
                           ) : null}
                           <div className="absolute inset-0 bg-gradient-to-t from-background/75 via-background/35 to-transparent" />

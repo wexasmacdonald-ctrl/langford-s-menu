@@ -1,6 +1,7 @@
 {
   "header": {
-    "title": "Hot Food / Cuisine Chaude"
+    "title": "Hot Food / Cuisine Chaude",
+    "titleSize": "22vh"
   },
   "slideA": {
     "fingerFoodsTitle": "Finger Foods / Amuses-gueules",
@@ -166,7 +167,7 @@
     "fries": [
       {
         "name": "Small / Petit",
-        "price": "4.34"
+        "price": "4.35"
       },
       {
         "name": "Medium / Moyen",
@@ -222,60 +223,62 @@
       {
         "name": "One Egg",
         "detail": "Choice of meat, home fries, toast, 12 oz coffee",
-        "price": "4.29"
+        "price": "$6.09"
       },
       {
         "name": "Two Eggs",
         "detail": "Choice of meat, home fries, toast, 12 oz coffee",
-        "price": "5.19"
+        "price": "$6.96"
       },
       {
         "name": "Hungry Man",
         "detail": "Three eggs, three meats, home fries, toast, 12 oz coffee",
-        "price": "8.69"
+        "price": "$10.44"
       }
     ],
     "breakfastExtras": [
       {
         "name": "Western",
-        "price": "3.99"
+        "price": "$3.99"
       },
       {
         "name": "Breakfast Burger",
-        "price": "2 for 8"
+        "price": "$4.99",
+        "forPrice": "2 for $8"
       },
       {
         "name": "BLT",
-        "price": "2 for 8"
+        "price": "$4.99",
+        "forPrice": "2 for $8"
       },
       {
         "name": "Breakfast Burrito",
-        "price": "5.99"
+        "price": "$6.99"
       },
       {
         "name": "Plain Bagel w/ Cream Cheese",
-        "price": "2.99"
+        "price": "$3.99"
       },
       {
         "name": "Add Home Fries",
-        "price": "2.49"
+        "price": "$3.49"
       }
     ],
     "shawarmaItems": [
       {
         "name": "Chicken Shawarma (naan)",
-        "price": "6.96",
-        "withGarlic": "10.44"
+        "price": "8.69",
+        "withGarlic": "12.18"
       },
       {
         "name": "Beef Shawarma (naan)",
-        "price": "6.96",
-        "withGarlic": "10.44"
+        "price": "8.69",
+        "withGarlic": "12.18"
       },
       {
         "name": "Beef Gyros",
-        "price": "6.96",
-        "withGarlic": "10.44"
+        "price": "8.69",
+        "withGarlic": "12.18"
       },
       {
         "name": "Chicken Shawarma Salad",
@@ -295,13 +298,13 @@
     "saladSizes": [
       {
         "name": "Garden Salad",
-        "small": "5.99",
-        "large": "9.99"
+        "small": "6.96",
+        "large": "10.44"
       },
       {
         "name": "Caesar Salad",
-        "small": "5.99",
-        "large": "9.99"
+        "small": "6.96",
+        "large": "10.44"
       }
     ]
   }

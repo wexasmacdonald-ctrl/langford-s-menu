@@ -17,6 +17,7 @@ export function useDaypart() {
   const [isBreakfast, setIsBreakfast] = useState(false);
   const [dayOfWeek, setDayOfWeek] = useState<DayOfWeek>("monday");
   const [daypartOverride, setDaypartOverrideState] = useState<DaypartOverride>(null);
+  const [dayOverride, setDayOverrideState] = useState<DayOfWeek | null>(null);
 
   useEffect(() => {
     const checkTime = () => {
@@ -29,6 +30,19 @@ export function useDaypart() {
         typeof window !== "undefined"
           ? window.localStorage.getItem("daypartOverride")
           : null;
+      const storedDayOverride =
+        typeof window !== "undefined"
+          ? window.localStorage.getItem("dayOverride")
+          : null;
+      const days: DayOfWeek[] = [
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+      ];
       const normalizedStored =
         storedOverride === "breakfast" || storedOverride === "regular"
           ? storedOverride
@@ -42,6 +56,20 @@ export function useDaypart() {
         setDaypartOverrideState(resolvedOverride);
       }
 
+      const normalizeDay = (value: string | null): DayOfWeek | null => {
+        if (!value) return null;
+        const normalizedDay = value.toLowerCase();
+        return days.includes(normalizedDay as DayOfWeek)
+          ? (normalizedDay as DayOfWeek)
+          : null;
+      };
+      const normalizedStoredDay = normalizeDay(storedDayOverride);
+      const normalizedParamDay = normalizeDay(forcedDay);
+      const resolvedDayOverride = normalizedStoredDay ?? normalizedParamDay;
+      if (resolvedDayOverride !== dayOverride) {
+        setDayOverrideState(resolvedDayOverride);
+      }
+
       if (resolvedOverride) {
         setIsBreakfast(resolvedOverride === "breakfast");
       } else {
@@ -49,32 +77,14 @@ export function useDaypart() {
         setIsBreakfast(hours < 11);
       }
 
-      const days: DayOfWeek[] = [
-        "sunday",
-        "monday",
-        "tuesday",
-        "wednesday",
-        "thursday",
-        "friday",
-        "saturday",
-      ];
-      if (forcedDay) {
-        const normalizedDay = forcedDay.toLowerCase();
-        if (days.includes(normalizedDay as DayOfWeek)) {
-          setDayOfWeek(normalizedDay as DayOfWeek);
-        } else {
-          setDayOfWeek(days[now.getDay()]);
-        }
-      } else {
-        setDayOfWeek(days[now.getDay()]);
-      }
+      setDayOfWeek(resolvedDayOverride ?? days[now.getDay()]);
     };
 
     checkTime();
     // Check every minute
     const interval = setInterval(checkTime, 60000);
     return () => clearInterval(interval);
-  }, [daypartOverride]);
+  }, [dayOverride, daypartOverride]);
 
   const setDaypartOverride = (value: DaypartOverride) => {
     if (typeof window !== "undefined") {
@@ -87,5 +97,23 @@ export function useDaypart() {
     setDaypartOverrideState(value);
   };
 
-  return { isBreakfast, dayOfWeek, daypartOverride, setDaypartOverride };
+  const setDayOverride = (value: DayOfWeek | null) => {
+    if (typeof window !== "undefined") {
+      if (value) {
+        window.localStorage.setItem("dayOverride", value);
+      } else {
+        window.localStorage.removeItem("dayOverride");
+      }
+    }
+    setDayOverrideState(value);
+  };
+
+  return {
+    isBreakfast,
+    dayOfWeek,
+    daypartOverride,
+    setDaypartOverride,
+    dayOverride,
+    setDayOverride,
+  };
 }
